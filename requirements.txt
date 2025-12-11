@@ -8,4 +8,9 @@ PyYAML
 python-multipart
 langchain
 langchain-groq
-
+requests-cache 
+retry-requests 
+numpy 
+pandas
+openmeteo-requests
+tavily-python
