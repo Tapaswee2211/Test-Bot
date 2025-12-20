@@ -153,7 +153,7 @@ workflow.add_edge("final", END)
 checkpointer = MemorySaver()
 
 
-app = workflow.compile(checkpointer=checkpointer)
+bot = workflow.compile(checkpointer=checkpointer)
 
 
 async def run_chatbot(user_message: str, session_id: str= "default"):
@@ -168,14 +168,14 @@ async def run_chatbot(user_message: str, session_id: str= "default"):
 
     input_messages = [HumanMessage(content=user_message)]
     #if history is empty Strictly enforce System Prompt at start
-    state_snapshot = await app.aget_state(config)
+    state_snapshot = await bot.aget_state(config)
 
     if len(state_snapshot.values.get("messages", [])) == 0:
         input_messages.insert(0, SystemMessage(content=SYSTEM_PROMPT))
 
     #Stream the events
     #stream_mode= 'values' gives the full list of messages at each step
-    events = app.astream(
+    events = bot.astream(
             {"messages" : input_messages},
             config,
             stream_mode="values"
@@ -192,7 +192,7 @@ async def run_chatbot(user_message: str, session_id: str= "default"):
             if isinstance(last_message, type(model.invoke("test"))):
                 final_response = last_message.content
 
-    snapshot = await app.aget_state(config)
+    snapshot = await bot.aget_state(config)
     if snapshot.values.get("messages"):
         return snapshot.values["messages"][-1].content
 
