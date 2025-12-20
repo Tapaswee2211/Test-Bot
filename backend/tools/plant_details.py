@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 
 # Reuse your existing auth helper
 try:
-    from helper import get_valid_token
+    from backend.app.helper import get_valid_token
 except ImportError:
     raise ImportError("Could not import get_valid_token from helper.")
 

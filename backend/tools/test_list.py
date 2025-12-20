@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 # Import your existing token helper
 # Ensure helper.py is in the same directory or adjust import
 try:
-    from helper import get_valid_token
+    from backend.app.helper import get_valid_token
 except ImportError:
     print("CRITICAL: Could not import 'get_valid_token' from helper.py")
     exit(1)

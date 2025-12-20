@@ -11,10 +11,10 @@ root_dir = os.path.dirname(curr_dir)
 if root_dir not in sys.path:
     sys.path.append(root_dir)
 try:
-    from backend.main import run_chatbot
+    from backend.app.main import run_chatbot
 except ImportError:
     sys.path.append(os.path.abspath("."))
-    from backend.main import run_chatbot
+    from backend.app.main import run_chatbot
 
 #------------------------------------
 st.set_page_config(

@@ -1,15 +1,15 @@
 # models.py in root
 from sqlalchemy import Column, String, Integer, Text
-from db import Base, engine
+from .db import Base, engine
 
 class OAuthToken(Base):
     __tablename__ = "oauth_tokens"
     id = Column(Integer, primary_key=True, index=True)
     provider = Column(String, index=True)
     access_token = Column(String)
-    refresh_token = Column(String, nullable=True)
-    expires_at = Column(Integer, nullable=True)
-    auth_user = Column(String, nullable=True)
+    refresh_token = Column(String)
+    expires_at = Column(Integer)
+    auth_user = Column(String)
     auth_ps_list = Column(Text, nullable=True)
 
 # Call this ONLY after the class is defined

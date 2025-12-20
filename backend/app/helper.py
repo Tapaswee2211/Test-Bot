@@ -4,14 +4,14 @@ import httpx
 import os 
 from pathlib import Path
 import time
-from models import init_db, OAuthToken
-from db import SessionLocal
+from .models import init_db, OAuthToken
+from .db import SessionLocal
 load_dotenv()
 
 scid = os.getenv("SUNGROW_APP_KEY")
 scs = os.getenv("SUNGROW_APP_SECRET")
 
-def save_token(provider, access_token, refresh_token=None, expires_in=None):
+def save_token(provider, access_token, refresh_token, expires_in):
     db = SessionLocal()
     expires_at = int(time.time()) + expires_in if expires_in else None
     db.query(OAuthToken).filter(OAuthToken.provider == provider).delete()
@@ -55,7 +55,7 @@ async def refresh_access_token():
                 },
                 json={
                     "refresh_token" : token.refresh_token,
-                    "appkey": scs
+                    "appkey": scid
                 }
             )
             data = res.json()
