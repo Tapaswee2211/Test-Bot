@@ -5,3 +5,7 @@ backend/__pycache__
 __pycache__
 login.py
 1.png
+key.pem
+cert.pem
+main.py
+main2.py
