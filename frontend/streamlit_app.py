@@ -16,7 +16,7 @@ root_dir = os.path.dirname(curr_dir)
 #except ImportError:
 #    sys.path.append(os.path.abspath("."))
 #    from backend.app.main import run_chatbot
-API_URL = ""
+API_URL = "https://test-bot-spgp.onrender.com/chat"
 
 #------------------------------------
 st.set_page_config(
