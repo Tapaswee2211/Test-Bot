@@ -52,6 +52,7 @@ with st.sidebar:
 
     if st.button("Clear Conversation", type="primary"):
         st.session_state.messages = []
+        st.session_state.session_id = f"user-{os.urandom(4).hex()}"
         st.rerun()
 
     st.markdown("### Tips")
@@ -88,9 +89,16 @@ if prompt := st.chat_input("Ask about your solar plants..."):
             try:
                 with st.spinner("Analyzing solar data..."):
                     #response = asyncio.run(run_chatbot(prompt, session_id = session_id))
-                    response = requests.post(API_URL, json={"message":prompt, "session_id": session_id})
-                message_placeholder.markdown(response)
-                st.session_state.messages.append({"role" : "assistant", "content" : response})
+                    resp = requests.post(
+                        API_URL,
+                        json={"message": prompt, "session_id": session_id},
+                        timeout=30
+                    )
+
+                    resp.raise_for_status()
+                    bot_reply = resp.json()["response"]
+                    message_placeholder.markdown(bot_reply)
+                    st.session_state.messages.append({"role" : "assistant", "content" : bot_reply})
             except Exception as e:
                 error_msg = f" System Error: {str(e)}"
                 message_placeholder.error(error_msg)

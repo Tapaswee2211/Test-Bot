@@ -2,7 +2,6 @@ from typing import cast, Optional
 from dotenv import load_dotenv 
 import httpx
 import os 
-from pathlib import Path
 import time
 from .models import init_db, OAuthToken
 from .db import SessionLocal

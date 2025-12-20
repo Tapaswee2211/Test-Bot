@@ -5,7 +5,7 @@ import os
 load_dotenv()
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(ROOT_DIR)
-from backend.quick_start import run_chatbot, get_session_history
+from backend.main import run_chatbot
 
 st.set_page_config(page_title="Solar Chatbot", layout = "centered")
 
@@ -40,13 +40,12 @@ with st.form("chat_form", clear_on_submit=False):
 
 if clear : 
     st.session_state.session_id = sid
-    get_session_history(st.session_state.session_id)
     st.rerun()
 
 if submit and user_input:
     with st.spinner("Thinking..."):
         try:
-            reply = run_chatbot(user_input, session_id=st.session_state.session_id)
+            reply = run_chatbot(user_input, session_id="user1")
         except Exception as e:
             reply = f"Error Callling Backend: {e}"
     if "display" not in st.session_state:
