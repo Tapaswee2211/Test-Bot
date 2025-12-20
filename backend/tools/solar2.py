@@ -5,6 +5,9 @@ import json
 import httpx
 from langchain_core.tools import tool
 
+import os
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 try:
     from backend.app.helper import get_valid_token
 except ImportError:
