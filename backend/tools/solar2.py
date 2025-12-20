@@ -33,8 +33,8 @@ class ListSolarPlantsInput(BaseModel):
 @tool(args_schema=ListSolarPlantsInput)
 async def list_solar_plants(action: str = "list_all") -> str:
     """
-    REQUIRED: Use this tool to fetch the list of solar power plants from iSolarCloud.
-    Returns the Name, ID, Status, and Location for every plant in the user's account.
+    No user-controlled arguments.
+    This tool always fetches all plants.
     """
     try:
         access_token = await get_valid_token()
@@ -110,10 +110,8 @@ class SolarPlantsBasicInfo(BaseModel):
     ps_ids: str = Field(
         default="list_all", 
         description= (
-            "A comma-separated string of REAL numeric plant IDs (e.g., '1711005'). "
-            "WARNING: You are FORBIDDEN from inventing IDs. You MUST extract these "
-            "IDs from the 'list_solar_plants' tool output. If you have not called "
-            "the list tool yet, STOP and call it now."
+            "Comma-separated numeric plant IDs obtained from list_solar_plants. "
+            "Example: '1711005,1688245'."
         )
     )
 
@@ -121,20 +119,16 @@ class SolarPlantsBasicInfo(BaseModel):
 @tool(args_schema=SolarPlantsBasicInfo)
 async def solar_plants_basic_info(ps_ids: str)-> str:
     """
-    REQUIRED: Fetches technical details for specific solar plants.
+     Fetches the list of solar power plants for the authenticated user.
 
-    MANDATORY PRE-REQUISITE: You MUST call list_solar_plants before using this tool to retrieve the actual numeric IDs.
+    Returns:
+    - Name
+    - ID (ps_id)
+    - Status
+    - Location
 
-    ARGUMENT RULES: > - Input: ps_ids (String).
-
-    Format: Comma-separated numeric IDs ONLY (e.g., "1711005,1688245").
-
-    NO SPACES between IDs.
-
-    STRICT FORBIDDEN: Do NOT guess IDs, do NOT use placeholders (like "ID1"), and do NOT use names here. If you do not have a numeric ID from the list tool, you cannot use this tool.
-
-    OUTPUT: Provides Name, ID, Status, Location, and technical summary for the specified IDs.
-
+    This tool performs data retrieval only.
+    The calling agent is responsible for interpreting and formatting the output.
     """
     try:
         access_token = await get_valid_token()

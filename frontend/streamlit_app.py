@@ -1,6 +1,7 @@
 import streamlit as st
-import asyncio
-import sys
+import requests 
+#import asyncio
+#import sys
 import os 
 from dotenv import load_dotenv
 
@@ -8,26 +9,34 @@ load_dotenv()
 
 curr_dir = os.path.dirname(os.path.abspath(__file__))
 root_dir = os.path.dirname(curr_dir)
-if root_dir not in sys.path:
-    sys.path.append(root_dir)
-try:
-    from backend.app.main import run_chatbot
-except ImportError:
-    sys.path.append(os.path.abspath("."))
-    from backend.app.main import run_chatbot
+#if root_dir not in sys.path:
+#    sys.path.append(root_dir)
+#try:
+#    from backend.app.main import run_chatbot
+#except ImportError:
+#    sys.path.append(os.path.abspath("."))
+#    from backend.app.main import run_chatbot
+API_URL = ""
 
 #------------------------------------
 st.set_page_config(
     page_title="Solar AI",
-    layout="wide",
+    layout="centered",
     initial_sidebar_state="expanded"
 )
 
 st.markdown("""
 <style>
-        .stChatMessage { padding: 1rem; border-radius: 10px; }
-        .stChatInput { position: fixed; bottom: 0; }
-        h1 { color: : #fca500; }
+    /* Styling for chat messages */
+    .stChatMessage { padding: 1rem; border-radius: 10px; }
+    
+    /* Clean up the title color */
+    h1 { color: #fca500; }
+
+    /* Optional: Small spacing at the very bottom */
+    [data-testid="stBottomBlockContainer"] {
+        padding-bottom: 50px;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -51,33 +60,37 @@ with st.sidebar:
         "- Ask: 'Status of Ovobel Foods'\n"
         "- Ask: 'Weather in Karnataka'"
     )
-st.title("Solar AI")
-st.caption("Monitoring Dashboard & Assistant")
+
+title_section = st.container(border=True)
+with title_section:
+    st.title("Solar AI")
+    st.caption("Monitoring Dashboard & Assistant")
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
-for message in st.session_state.messages : 
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
 
+chat_display = st.container()
+
+with chat_display:
+    for message in st.session_state.messages: 
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
+
+# Place the input OUTSIDE of any with blocks
 if prompt := st.chat_input("Ask about your solar plants..."):
-    with st.chat_message("user"):
-        st.markdown(prompt)
+    with chat_display:
+        with st.chat_message("user"):
+            st.markdown(prompt)
     st.session_state.messages.append({"role" : "user", "content" : prompt})
-
-    with st.chat_message("assistant"):
-        message_placeholder = st.empty()
-        try:
-            with st.spinner("Analyaing solar data..."):
-                response = asyncio.run(run_chatbot(prompt, session_id = session_id))
-            message_placeholder.markdown(response)
-            st.session_state.messages.append({"role" : "assistant", "content" : response})
-        except Exception as e:
-            error_msg = f" System Error: {str(e)}"
-            message_placeholder.error(error_msg)
-
-
-
-
-    
-
+    with chat_display:
+        with st.chat_message("assistant"):
+            message_placeholder = st.empty()
+            try:
+                with st.spinner("Analyzing solar data..."):
+                    #response = asyncio.run(run_chatbot(prompt, session_id = session_id))
+                    response = requests.post(API_URL, json={"message":prompt, "session_id": session_id})
+                message_placeholder.markdown(response)
+                st.session_state.messages.append({"role" : "assistant", "content" : response})
+            except Exception as e:
+                error_msg = f" System Error: {str(e)}"
+                message_placeholder.error(error_msg)
