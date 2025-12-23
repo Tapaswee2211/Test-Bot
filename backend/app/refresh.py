@@ -13,9 +13,13 @@ scs = os.getenv("SUNGROW_APP_SECRET")
 
 db = SessionLocal()
 token = db.query(OAuthToken).filter(OAuthToken.provider == "isolarcloud").first()
-print(token.access_token)
-print(token.refresh_token)
-print(token.expires_at)
+print("Acccess: ", token.access_token)
+print("Refresh: ",token.refresh_token)
+print("Exp : ", token.expires_at)
+
+if token.expires_at is not None:
+    exp : int = token.expires_at
+    print(int(time.time()) - exp)
 
 def save_token( provider, access_token, refresh_token, expires_in):
     expires_at = int(time.time()) + expires_in 
@@ -59,9 +63,10 @@ async def refresh_access():
         )
         print("saved refreshed token")
 if __name__ == "__main__":
-    #asyncio.run(refresh_access())
+    asyncio.run(refresh_access())
     tokens = db.query(OAuthToken).all()
     for t in tokens:
+        print("\nNew Tocken")
         print("Access Token" ,t.access_token)
         print("Access Token" ,t.refresh_token)
         eat = cast(Optional[int], t.expires_at)

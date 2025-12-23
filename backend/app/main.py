@@ -12,7 +12,7 @@ from langgraph.graph import StateGraph, START, END
 from langgraph.prebuilt import ToolNode, tools_condition
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph.message import add_messages
-
+import asyncio
 import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
@@ -236,10 +236,10 @@ async def chat(query: Query):
 
     return {"response": response}
 
-#if __name__ == "__main__":
-#    async def main():
-#        print("--- Starting Solar Assistant----")
-#        reply5 = await run_chatbot("From my power plants give basic information of Rama burger king", session_id="user1")
-#        print(f"\nBot: {reply5}")
-#    asyncio.run(main())
+if __name__ == "__main__":
+    async def main():
+        print("--- Starting Solar Assistant----")
+        reply5 = await run_chatbot("From my power plants give basic information of Rama burger king", session_id="user1")
+        print(f"\nBot: {reply5}")
+    asyncio.run(main())
 
