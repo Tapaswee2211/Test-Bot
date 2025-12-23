@@ -92,7 +92,7 @@ if prompt := st.chat_input("Ask about your solar plants..."):
                     resp = requests.post(
                         API_URL,
                         json={"message": prompt, "session_id": session_id},
-                        timeout=30
+                        timeout=120
                     )
 
                     resp.raise_for_status()
